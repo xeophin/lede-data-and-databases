@@ -74,16 +74,14 @@ GROUP BY country
 LIMIT 15;
 
 -- Question 9
-WITH timeseries AS (SELECT country, min(year) AS min_year, max(year) AS max_year
-                    FROM solar
-                    GROUP BY country), solar1 AS (SELECT *
-                                                  FROM solar), solar2 AS (SELECT *
-                                                                          FROM solar)
+-- Alternative version without the with clause
 SELECT timeseries.country, min_year, max_year, solar1.usage AS start_usage, solar2.usage AS last_usage
-FROM timeseries
-  JOIN solar1 ON timeseries.country = solar1.country AND solar1.year =
+FROM (SELECT country, min(year) AS min_year, max(year) AS max_year
+      FROM solar
+      GROUP BY country) as timeseries
+  JOIN solar as solar1 ON timeseries.country = solar1.country AND solar1.year =
     timeseries.min_year
-  JOIN solar2 ON timeseries.country = solar2.country AND solar2.year =
+  JOIN solar as solar2 ON timeseries.country = solar2.country AND solar2.year =
     timeseries.max_year
 ORDER BY last_usage DESC
 LIMIT 15;
