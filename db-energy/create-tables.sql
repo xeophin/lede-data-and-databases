@@ -21,3 +21,12 @@ CREATE TABLE wind (
   usage   DOUBLE PRECISION,
   notes   VARCHAR(40)
 );
+
+CREATE TABLE hydro (
+  country VARCHAR(120),
+  type    VARCHAR(120),
+  year    INT,
+  unit    VARCHAR(40),
+  usage   DOUBLE PRECISION,
+  notes   VARCHAR(40)
+);

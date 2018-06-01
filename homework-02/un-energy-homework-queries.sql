@@ -76,9 +76,9 @@ LIMIT 15;
 -- Question 9
 WITH timeseries AS (SELECT country, min(year) AS min_year, max(year) AS max_year
                     FROM solar
-                    GROUP BY country), 
-    solar1 AS (SELECT * FROM solar), 
-    solar2 AS (SELECT * FROM solar)
+                    GROUP BY country), solar1 AS (SELECT *
+                                                  FROM solar), solar2 AS (SELECT *
+                                                                          FROM solar)
 SELECT timeseries.country, min_year, max_year, solar1.usage AS start_usage, solar2.usage AS last_usage
 FROM timeseries
   JOIN solar1 ON timeseries.country = solar1.country AND solar1.year =
@@ -87,3 +87,14 @@ FROM timeseries
     timeseries.max_year
 ORDER BY last_usage DESC
 LIMIT 15;
+
+-- Question 10
+SELECT solar.country, avg(hydro.usage) AS avg_hydro, avg(
+    solar.usage) AS avg_solar, avg(wind
+    .usage) AS avg_wind
+FROM solar
+  JOIN wind ON solar.country = wind.country
+  JOIN hydro ON solar.country = hydro.country
+GROUP BY solar.country
+ORDER BY avg_hydro DESC
+LIMIT 10;
