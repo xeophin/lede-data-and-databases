@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/class-20180529.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/class-20180531.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/energy/create-tables.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/energy/solar.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/mondial/homework-1-manz.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/classwork/class-20180529.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/classwork/class-20180531.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db-energy/create-tables.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db-energy/solar.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db-mondial/homework-1-manz.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/homework-02/un-energy-homework-queries.sql" dialect="PostgreSQL" />
   </component>
 </project>
