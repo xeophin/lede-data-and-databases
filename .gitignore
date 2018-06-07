@@ -247,3 +247,4 @@ Session.vim
 tags
 # Persistent undo
 [._]*.un~
+/.idea/usage.statistics.xml
