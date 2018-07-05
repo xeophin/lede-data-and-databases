@@ -4,6 +4,7 @@
     <data-source source="LOCAL" name="friendlist@localhost [2]" uuid="a23ab81c-ec56-405b-ae38-908ef5d82e63">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
+      <schema-control>AUTOMATIC</schema-control>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/friendlist</jdbc-url>
     </data-source>
