@@ -248,3 +248,4 @@ tags
 # Persistent undo
 [._]*.un~
 /.idea/usage.statistics.xml
+/project/apikeys.py
