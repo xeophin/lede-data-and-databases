@@ -24,6 +24,7 @@ SELECT finalists.country, sum(CASE WHEN ranking = 1
 FROM finalists
 GROUP BY finalists.country
 ORDER BY realisation DESC;
+-- wait, why is Azerbaijan shown as not having won?
 
 -- get the winner each year
 SELECT c2.year, artist, song, country
@@ -32,10 +33,32 @@ FROM finalists
 WHERE ranking = 1
 ORDER BY c2.year DESC;
 -- strange, we are missing winners between 2008 and 2011?
-SELECT artist, song, country, ranking
+SELECT artist, song, country, ranking, c2.year
 FROM finalists
        JOIN contests c2 ON finalists.contest_id = c2.id
-WHERE c2.year = 2013;
+WHERE 2007 < c2.year AND c2.year < 2012;
+-- yepp, definitely missing data here.
+
+-- Does the country even matter?
+-- Get composers that had the most songs in the running in one year
+SELECT c2.year, count(song_id), a.name
+FROM composers
+       JOIN finalists f ON composers.song_id = f.id
+       JOIN contests c2 ON f.contest_id = c2.id
+       JOIN artists a ON composers.artist_id = a.id
+GROUP BY c2.year, a.name
+HAVING count(song_id) > 1
+ORDER BY count DESC;
+
+-- Get the same with writers
+SELECT c2.year, count(song_id), a.name
+FROM writers
+       JOIN finalists f ON writers.song_id = f.id
+       JOIN contests c2 ON f.contest_id = c2.id
+       JOIN artists a ON writers.artist_id = a.id
+GROUP BY c2.year, a.name
+HAVING count(song_id) > 1
+ORDER BY count DESC;
 
 -- composers with the most wins in the top 3
 SELECT a.name, count(f.song)
@@ -79,7 +102,7 @@ WHERE t.name IN ('pop', 'dance', 'schlager', 'chanson', 'ballad', 'swing',
     'alternative', 'funk', 'eurodance', 'world', 'rap', 'hip-hop', 'ethno');
 
 -- Except ... if we do that, we only get tags for a low number of song each year
-SELECT c2.year, COUNT(f.country)
+SELECT c2.year, COUNT(f.country) AS number_of_tagged_songs
 FROM tags_conn
        JOIN finalists f ON tags_conn.song_id = f.id
        JOIN tags t ON tags_conn.tag_id = t.id
@@ -90,24 +113,3 @@ WHERE t.name IN ('pop', 'dance', 'schlager', 'chanson', 'ballad', 'swing',
 GROUP BY c2.year
 ORDER BY c2.year DESC;
 -- not enough to really create a visualisation
-
--- Get composers that had the most songs in the running in one year
-SELECT c2.year, count(song_id), a.name
-FROM composers
-       JOIN finalists f ON composers.song_id = f.id
-       JOIN contests c2 ON f.contest_id = c2.id
-       JOIN artists a ON composers.artist_id = a.id
-GROUP BY c2.year, a.name
-HAVING count(song_id) > 1
-ORDER BY count DESC;
-
--- Get the same with writers
-SELECT c2.year, count(song_id), a.name
-FROM writers
-       JOIN finalists f ON writers.song_id = f.id
-       JOIN contests c2 ON f.contest_id = c2.id
-       JOIN artists a ON writers.artist_id = a.id
-GROUP BY c2.year, a.name
-HAVING count(song_id) > 1
-ORDER BY count DESC;
-
