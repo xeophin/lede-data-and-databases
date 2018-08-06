@@ -15,11 +15,11 @@ ORDER BY count DESC;
 -- number the country has been in the finals, i.e. how well the country used 
 -- the chance
 SELECT finalists.country, sum(CASE WHEN ranking = 1
-  THEN 1
-                              ELSE 0 END) AS wins,
+                                        THEN 1
+                                   ELSE 0 END) AS wins,
        count(id) AS finale_participation, sum(CASE WHEN ranking = 1
-  THEN 1
-                                              ELSE 0 END) :: FLOAT /
+                                                        THEN 1
+                                                   ELSE 0 END) :: FLOAT /
                                           count(id) AS realisation
 FROM finalists
 GROUP BY finalists.country
@@ -113,3 +113,13 @@ WHERE t.name IN ('pop', 'dance', 'schlager', 'chanson', 'ballad', 'swing',
 GROUP BY c2.year
 ORDER BY c2.year DESC;
 -- not enough to really create a visualisation
+
+
+-- Apparently we are missing some data, let's figure out which years
+SELECT c2.year, count(finalists.id)
+FROM finalists
+       JOIN contests c2 ON finalists.contest_id = c2.id
+GROUP BY c2.year
+ORDER BY c2.year;
+
+-- okay, we are missing the contests 2008–2011
