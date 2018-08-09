@@ -1,16 +1,17 @@
 import datetime
-import re
 import uuid
 from random import randint
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from slugify import slugify
 from time import sleep
 
-# CONSTANTS
 
+from project.common import normalise_artist_names, get_uuid_for_artist, \
+  split_creators
+
+# CONSTANTS
 BASE_URL = 'https://eurovision.tv'
 TODAY = datetime.datetime.now().strftime('%Y%m%d')
 
@@ -156,19 +157,6 @@ def fill_missing_pieces(finalist_row):
     finalists_df.at[url, detail_tuple[0]] = detail_tuple[1]
 
 
-def normalise_artist_names(name):
-  #  We're just gonna use slugify to normalise the artist name and compare 
-  # against that
-  return slugify(name.strip())
-
-
-def get_uuid_for_artist(artist_name):
-  PREFIX = 'internal://artist/'
-  return uuid.uuid3(
-    uuid.NAMESPACE_URL,
-    PREFIX + normalise_artist_names(artist_name))
-
-
 def add_artist_to_lists(song_id, artist_name, artists_table, join_table):
   """
   Normalise the artist name, generate a UUID, check whether it is already 
@@ -208,15 +196,6 @@ def add_artist_to_lists(song_id, artist_name, artists_table, join_table):
       'artist_id': artist_id
     }
   )
-
-
-def split_creators(creators):
-  if creators == '-':
-    return []
-
-  pattern = r'\s*[,/&+()]+\s*|\Wand\W'
-  splitted = re.split(pattern, creators)
-  return splitted
 
 
 def extract_artists(row):
