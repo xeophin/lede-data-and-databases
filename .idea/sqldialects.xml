@@ -10,4 +10,7 @@
     <file url="file://$PROJECT_DIR$/project/queries.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
+  <component name="SqlResolveMappings">
+    <file url="file://$PROJECT_DIR$/project/spotify-data.py" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;name&quot;:{     &quot;@name&quot;:&quot;a23ab81c-ec56-405b-ae38-908ef5d82e63&quot;,     &quot;@quoted&quot;:&quot;1&quot;    },    &quot;group&quot;:{     &quot;@kind&quot;:&quot;database&quot;,     &quot;node&quot;:{      &quot;name&quot;:{       &quot;@name&quot;:&quot;esc&quot;,       &quot;@quoted&quot;:&quot;1&quot;      },      &quot;group&quot;:{       &quot;@kind&quot;:&quot;schema&quot;,       &quot;node&quot;:{        &quot;name&quot;:{         &quot;@name&quot;:&quot;public&quot;,         &quot;@quoted&quot;:&quot;1&quot;        }       }      }     }    }   }  } }}" />
+  </component>
 </project>
