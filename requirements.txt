@@ -1,1 +1,3 @@
+oauthlib
+requests
 pandas
