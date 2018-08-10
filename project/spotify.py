@@ -1,7 +1,11 @@
+# must likely be installed using `pip install requests_oauthlib`
+from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
-from requests_oauthlib import OAuth2Session
 
+# Dictionary of the form {'client_id': 'xxx', 'client_secret': 'xxx'}, 
+# imported from another file that is ignored by git so it won't be uploaded 
+# to GitHub.
 from project.apikeys import SPOTIFY_CREDENTIALS
 
 
