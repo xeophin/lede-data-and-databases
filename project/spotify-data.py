@@ -36,21 +36,21 @@ for performer, uuid in performers[:10]:
     first_hit = results['artists']['items'][0]
     genres = first_hit['genres']
     name = first_hit['name']
-    id = first_hit['id']
+    song_id = first_hit['id']
 
     print('Looking for {} yielded {}, {} with genres {}'.format(
       performer,
-      name, id, ', '.join(genres)))
+      name, song_id, ', '.join(genres)))
 
     # save artist Spotify ID to database, just to be sure
     cursor.execute("UPDATE artists SET spotify_id = %s WHERE id = %s",
-                   (id, uuid))
+                   (song_id, uuid))
 
     # normalise genres, write to db
     for genre in genres:
       normalised_genre = normalise_tag_name(genre)
       genre_uuid = create_uuid(normalised_genre, 'internal://genre/')
-      
+
       # Add the genre to the database (unless we already found it at some 
       # point, then just do nothing)
       add_to_genre_query = """
@@ -58,7 +58,7 @@ for performer, uuid in performers[:10]:
       CONFLICT DO NOTHING
       """
       cursor.execute(add_to_genre_query, (genre_uuid, normalised_genre, genre))
-      
+
       # Add the connection, so we know which artist has what genre.
       add_to_conn_table_query = """
       INSERT INTO genres_conn (artist_id, genre_id) VALUES (%s, %s) ON CONFLICT DO NOTHING 
@@ -72,17 +72,78 @@ for performer, uuid in performers[:10]:
 # Commit all the database changes back to the database
 conn.commit()
 
-# Save the list back to CSV
-
+# %%
 ########### SONG INFORMATION #################
 
-# Load the artist list
+# Load the song list
+song_query = '''
+SELECT id, song, artist 
+FROM finalists; 
+'''
+
+cursor.execute(song_query)
+songs = cursor.fetchall()
+
+# refresh the Spotify token
+spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 # Loop through the list, search for the track on Spotify
 # https://developer.spotify.com/documentation/web-api/reference/search/search/
+for song_id, song_title, artist in songs[:10]:
+  result = spotify.search('artist:{} track:{}'.format(artist, song_title),
+                          limit=1)
+
+  if result['tracks']['total'] > 0:
+    spotify_track = result['tracks']['items'][0]
+    print('Found {} with ID {}'.format(spotify_track['name'], spotify_track[
+      'id']))
+
+    # get attributes
+    features_list = spotify.audio_features([spotify_track['id']])
+    features = features_list[0]
+
+    update_query = """
+    UPDATE finalists 
+    SET 
+      spotify_id = %s,
+      spotify_acousticness = %s,
+      spotify_danceability = %s,
+      spotify_duration = %s,
+      spotify_energy = %s,
+      spotify_instrumentalness = %s,
+      spotify_key = %s,
+      spotify_liveness = %s,
+      spotify_loudness = %s,
+      spotify_mode = %s,
+      spotify_speechiness = %s,
+      spotify_tempo = %s,
+      spotify_valence = %s
+    WHERE id = %s
+    """
+
+    cursor.execute(update_query, (
+      spotify_track['id'],
+      features['acousticness'],
+      features['danceability'],
+      features['duration_ms'],
+      features['energy'],
+      features['instrumentalness'],
+      features['key'],
+      features['liveness'],
+      features['loudness'],
+      features['mode'],
+      features['speechiness'],
+      features['tempo'],
+      features['valence'],
+      song_id
+    ))
+    conn.commit()
+
+  else:
+    print('Track {} by {} not found'.format(song_title, artist))
 
 # https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/
 
 
-# Close the database connection
+# %% Close the database connection
 conn.close()
