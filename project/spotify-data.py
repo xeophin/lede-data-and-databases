@@ -25,10 +25,11 @@ spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 # %%
 # Loop through the list, search for artist on spotify, get spotify ID
-for performer, uuid in performers[:10]:
+for performer, uuid in performers:
   params = {
     'q': performer,
-    'type': 'artist'
+    'type': 'artist',
+    'limit': 1
   }
 
   results = spotify.search(**params)
@@ -78,7 +79,8 @@ conn.commit()
 # Load the song list
 song_query = '''
 SELECT id, song, artist 
-FROM finalists; 
+FROM finalists
+WHERE spotify_id IS NULL
 '''
 
 cursor.execute(song_query)
@@ -89,7 +91,7 @@ spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 # Loop through the list, search for the track on Spotify
 # https://developer.spotify.com/documentation/web-api/reference/search/search/
-for song_id, song_title, artist in songs[:10]:
+for song_id, song_title, artist in songs:
   result = spotify.search('artist:{} track:{}'.format(artist, song_title),
                           limit=1)
 
